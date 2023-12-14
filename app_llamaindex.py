@@ -45,15 +45,17 @@ index = load_data()
 
 if "chat_engine" not in st.session_state.keys():  # Initialize the chat engine
     st.session_state.chat_engine = index.as_chat_engine(
-        chat_mode="condense_question", verbose=True
+        chat_mode="condense_question",
+        verbose=True,
+        streaming=True,
     )
 
-if prompt := st.chat_input(
-    "Your question"
-):  # Prompt for user input and save to chat history
+# Prompt for user input and save to chat history
+if prompt := st.chat_input("Your question"):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-for message in st.session_state.messages:  # Display the prior chat messages
+# Display the prior chat messages
+for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
