@@ -3,6 +3,7 @@ from llama_index import VectorStoreIndex, ServiceContext
 from llama_index.llms import OpenAI
 import openai
 from llama_index import SimpleDirectoryReader
+import os
 
 st.set_page_config(
     page_title="Chat with 21st.ai",
@@ -11,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="auto",
     menu_items=None,
 )
-openai.api_key = st.secrets.OPENAI_API_KEY
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 st.title("Chat with 21st.ai 2️⃣1️⃣")
 
 if "messages" not in st.session_state.keys():  # Initialize the chat messages history
