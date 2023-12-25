@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
+import time
 
 
 def is_valid_url(url, main_domain, exclude_pattern):
@@ -26,12 +27,14 @@ def scrape_site(start_url, exclude_pattern):
 
     while to_visit:
         url = to_visit.pop()
-        if url in visited or is_image_url(url):
-            continue
         visited.add(url)
 
         try:
-            response = requests.get(url)
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            }
+            response = requests.get(url, headers=headers)
+            
             soup = BeautifulSoup(response.content, "html.parser")
 
             # Extract and print text
@@ -44,7 +47,10 @@ def scrape_site(start_url, exclude_pattern):
             for link in soup.find_all("a", href=True):
                 absolute_link = urljoin(url, link["href"])
                 if is_valid_url(absolute_link, main_domain, exclude_pattern):
-                    to_visit.add(absolute_link)
+                    if url in visited or is_image_url(url):
+                        continue
+                    else:
+                        to_visit.add(absolute_link)
 
         except requests.exceptions.RequestException as e:
             print(f"Request failed for {url}: {e}")
@@ -52,8 +58,9 @@ def scrape_site(start_url, exclude_pattern):
     return scraped_text
 
 
-start_url = "https://21st.ai/"
-exclude_pattern = "https://21st.ai/no/"
-scraped_text = scrape_site(start_url, exclude_pattern)
-with open("scraped_text.txt", "w") as file:
+start_url = "https://21st.bio/"
+scraped_text = scrape_site(start_url, "")
+from datetime import datetime
+timestamp = datetime.now()
+with open(f"experiments/scraped_text_{timestamp.year}-{timestamp.month}-{timestamp.day}-{timestamp.hour}-{timestamp.minute}.txt", "w") as file:
     file.write(scraped_text)

@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ragster"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+streamlit = "^1.29.0"
+openai = "^1.6.1"
+llama-index = "^0.9.21"
+nltk = "^3.8.1"
+python-dotenv = "^1.0.0"
+debugpy = "^1.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
