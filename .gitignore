@@ -23,3 +23,7 @@ Thumbs.db
 
 .env
 .vscode/launch.json
+
+.venv
+.vscode
+
