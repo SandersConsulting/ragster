@@ -1,0 +1,13 @@
+urls:
+  - "https://www.proff.no"
+  - "https://www.proff.no/info/om-proff/"
+  - "https://www.proff.no/info/kilder/"
+  - "https://www.proff.no/info/samarbeidspartnere/"
+  - "https://www.proff.no/info/hjelp-og-kontakt/"
+  - "https://www.proff.no/info/alle-produkter/"
+  - "https://www.proff.no/info/markedspakker/"
+  - "https://www.proff.no/info/proff-api/"
+  - "https://www.proff.no/info/display/"
+
+company: 'proff'
+domain: 'no'

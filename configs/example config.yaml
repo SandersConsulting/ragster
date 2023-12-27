@@ -1,0 +1,9 @@
+# list of urls to scrape
+urls:
+  - https://example.com/ 
+  - https://example.com/sublevel-url1
+  - https://example.com/sublevel-url2
+
+# If the company top level domain is proff.no:
+company: 'proff'
+domain: 'no' 
