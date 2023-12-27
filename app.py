@@ -6,30 +6,40 @@ from llama_index import SimpleDirectoryReader
 import os
 from dotenv import find_dotenv, load_dotenv
 import debugpy
+from pathlib import Path
+import yaml
+
 
 load_dotenv(find_dotenv())
+
+PAGE_NAME = os.environ.get("PAGE_NAME")
+
 if False: # Set to False to disable debugging
     # 5678 is the default attach port in the VS Code debug configurations
     if not debugpy.is_client_connected():
         debugpy.listen(5678)
         debugpy.wait_for_client()
 
+# Load the YAML file
+with open(Path().cwd() / "configs" / f'{PAGE_NAME}_config.yaml', 'r') as file:
+    config = yaml.safe_load(file)
+
 
 st.set_page_config(
-    page_title="Chat with 21st.ai",
+    page_title=f"Chat with {config['company']}.{config['domain']}",
     page_icon="💬",
     layout="centered",
     initial_sidebar_state="auto",
     menu_items=None,
 )
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-st.title("Chat with 21st.ai 2️⃣1️⃣")
+st.title(f"Chat with {config['company']}.{config['domain']} 2️⃣1️⃣")
 
 if "messages" not in st.session_state.keys():  # Initialize the chat messages history
     st.session_state.messages = [
         {
             "role": "assistant",
-            "content": "Ask me a question about 21st.ai!",
+            "content": f"Ask me a question about {config['company']}.{config['domain']}!",
         }
     ]
 
@@ -39,13 +49,13 @@ def load_data():
     with st.spinner(
         text="Loading and indexing the web page – hang tight! This should take less than a minute."
     ):
-        reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
+        reader = SimpleDirectoryReader(input_files=[Path().cwd() / "data" / f"{PAGE_NAME}.txt"], recursive=True)
         docs = reader.load_data()
         service_context = ServiceContext.from_defaults(
             llm=OpenAI(
                 model="gpt-3.5-turbo",
                 temperature=0.5,
-                system_prompt="You are an expert on a product called 21st and your job is to answer questions about the product. Assume that all questions are related to the 21st product. Keep your answers based on facts – do not hallucinate features.",
+                system_prompt=f"You are an expert on a company called {config['company']} and your job is to answer questions about the company. Assume that all questions are related to the {config['company']} product. Keep your answers based on facts – do not hallucinate features.",
             )
         )
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
