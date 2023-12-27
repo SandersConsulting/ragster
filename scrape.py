@@ -1,5 +1,7 @@
+import yaml
 import math
 import requests
+from pathlib import Path
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from datetime import datetime, timedelta
@@ -76,19 +78,19 @@ def scrape_site(urls, exclude_pattern, output_path):
 
 
 if __name__ == "__main__":
-    urls = [
-        "https://www.proff.no",
-        "https://www.proff.no/info/om-proff/",
-        "https://www.proff.no/info/kilder/",
-        "https://www.proff.no/info/samarbeidspartnere/",
-        "https://www.proff.no/info/hjelp-og-kontakt/",
-        "https://www.proff.no/info/alle-produkter/",
-        "https://www.proff.no/info/markedspakker/",
-        "https://www.proff.no/info/proff-api/",
-        "https://www.proff.no/info/display/",
-    ]
+    import argparse
+    parser = argparse.ArgumentParser(description='Scrape content of config-provided urls')
+
+    # Required positional argument
+    parser.add_argument('--page_name', '-pn', default="proff", type=str, help='Page name to find correct config')
+    args = parser.parse_args()
+
+    page_name = args.page_name
+    # Load the YAML file
+    with open(Path().cwd() / "configs" / f'{page_name}_config.yaml', 'r') as file:
+        config = yaml.safe_load(file)
     start_timestamp = datetime.now()
-    output_path = f"experiments/scraped_text_{start_timestamp.year}-{start_timestamp.month}-{start_timestamp.day}-{start_timestamp.hour}-{start_timestamp.minute}.txt"
-    scraped_text = scrape_site(urls, " ", output_path=output_path)
+    output_path = f"experiments/scraped_{page_name}_{start_timestamp.year}-{start_timestamp.month}-{start_timestamp.day}-{start_timestamp.hour}-{start_timestamp.minute}.txt"
+    scraped_text = scrape_site(config['urls'], " ", output_path=output_path)
     
     
