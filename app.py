@@ -9,10 +9,10 @@ import debugpy
 from pathlib import Path
 import yaml
 
+# TODO:
+# Simple graph store
+# Modulize
 
-load_dotenv(find_dotenv())
-
-PAGE_NAME = os.environ.get("PAGE_NAME")
 
 if False: # Set to False to disable debugging
     # 5678 is the default attach port in the VS Code debug configurations
@@ -20,26 +20,33 @@ if False: # Set to False to disable debugging
         debugpy.listen(5678)
         debugpy.wait_for_client()
 
+
+load_dotenv(find_dotenv())
+
+PAGE_NAME = "lovdata"
+print(PAGE_NAME)
+
+
 # Load the YAML file
 with open(Path().cwd() / "configs" / f'{PAGE_NAME}_config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 
 st.set_page_config(
-    page_title=f"Chat with {config['company']}.{config['domain']}",
+    page_title=f"Chat med {config['company']}.{config['domain']}",
     page_icon="💬",
     layout="centered",
     initial_sidebar_state="auto",
     menu_items=None,
 )
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-st.title(f"Chat with {config['company']}.{config['domain']} 2️⃣1️⃣")
+st.title(f"Chat med {config['company']}.{config['domain']}")
 
 if "messages" not in st.session_state.keys():  # Initialize the chat messages history
     st.session_state.messages = [
         {
             "role": "assistant",
-            "content": f"Ask me a question about {config['company']}.{config['domain']}!",
+            "content": f"Still meg et spørsmål om {config['company']}.{config['domain']}!",
         }
     ]
 
@@ -55,7 +62,7 @@ def load_data():
             llm=OpenAI(
                 model="gpt-3.5-turbo",
                 temperature=0.5,
-                system_prompt=f"You are an expert on a company called {config['company']} and your job is to answer questions about the company. Assume that all questions are related to the {config['company']} product. Keep your answers based on facts – do not hallucinate features.",
+                system_prompt=f"You are an expert on a company called {config['company']} and your job is to answer questions about the company. Assume that all questions are related to the {config['company']} product. Keep your answers based on facts – do not hallucinate features. Always wrap your answer up with a link to the content that you base your answer on",
             )
         )
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)

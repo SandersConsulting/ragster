@@ -7,6 +7,9 @@ from urllib.parse import urljoin, urlparse
 from datetime import datetime, timedelta
 import time
 
+#TODO:
+# make it click around instead of subpages
+
 
 def is_valid_url(url, main_domain, exclude_pattern):
     parsed = urlparse(url)
@@ -82,7 +85,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Scrape content of config-provided urls')
 
     # Required positional argument
-    parser.add_argument('--page_name', '-pn', default="proff", type=str, help='Page name to find correct config')
+    parser.add_argument('--page_name', '-pn', default="lovdata", type=str, help='Page name to find correct config')
     args = parser.parse_args()
 
     page_name = args.page_name
