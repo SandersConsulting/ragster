@@ -3,6 +3,7 @@ urls:
   - https://lovdata.no/info/redaktoransvar
   - https://lovdata.no/dokument/SF/forskrift/2017-06-19-840 
   - https://lovdata.no/dokument/SF/forskrift/2009-12-18-1665
+  - https://lovdata.no/dokument/NL/lov/2018-06-01-23
 
 company: 'lovdata'
 domain: 'no' 

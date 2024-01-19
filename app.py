@@ -24,7 +24,6 @@ if False: # Set to False to disable debugging
 load_dotenv(find_dotenv())
 
 PAGE_NAME = "lovdata"
-print(PAGE_NAME)
 
 
 # Load the YAML file
