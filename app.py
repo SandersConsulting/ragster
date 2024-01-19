@@ -60,8 +60,8 @@ def load_data():
         service_context = ServiceContext.from_defaults(
             llm=OpenAI(
                 model="gpt-3.5-turbo",
-                temperature=0.5,
-                system_prompt=f"You are an expert on a company called {config['company']} and your job is to answer questions about the company. Assume that all questions are related to the {config['company']} product. Keep your answers based on facts – do not hallucinate features. Always wrap your answer up with a link to the content that you base your answer on",
+                temperature=0,
+                system_prompt=f"Aldri hallusiner. Skriv svar basert på konteksten du får. Du snakker med en advokat og kan alt svare på spørsmål om hvitvaskingsforskriften, energimerkeforskriften og byggteknisk forskrift som funnet på {config['company']}. Du skal svare på spørsmål om paragrafer i tre ulike forskrifter. Skriv alltid svaret i to paragrafer. Først et lengre svar på spørsmålet, før du sier at det går an å finne mer informasjon i den forskriften du skriver om, samt lenken til forskriften.",
             )
         )
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
