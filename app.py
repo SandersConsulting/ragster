@@ -32,20 +32,20 @@ with open(Path().cwd() / "configs" / f'{PAGE_NAME}_config.yaml', 'r') as file:
 
 
 st.set_page_config(
-    page_title=f"Chat med {config['company']}.{config['domain']}",
+    page_title=f"Chat med energimerkeforskriften, byggteknisk forskrift eller hvitvaskingsforskriften",
     page_icon="💬",
     layout="centered",
     initial_sidebar_state="auto",
     menu_items=None,
 )
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-st.title(f"Chat med {config['company']}.{config['domain']}")
+st.title(f"Chat med energimerkeforskriften, byggteknisk forskrift eller hvitvaskingsforskriften")
 
 if "messages" not in st.session_state.keys():  # Initialize the chat messages history
     st.session_state.messages = [
         {
             "role": "assistant",
-            "content": f"Still meg et spørsmål om {config['company']}.{config['domain']}!",
+            "content": f"Still meg et spørsmål om en av de tre forskriftene.",
         }
     ]
 
@@ -53,7 +53,7 @@ if "messages" not in st.session_state.keys():  # Initialize the chat messages hi
 @st.cache_resource(show_spinner=False)
 def load_data():
     with st.spinner(
-        text="Loading and indexing the web page – hang tight! This should take less than a minute."
+        text="Laster inn data - dette tar maks et minutt.."
     ):
         reader = SimpleDirectoryReader(input_files=[Path().cwd() / "data" / f"{PAGE_NAME}.txt"], recursive=True)
         docs = reader.load_data()
@@ -61,7 +61,10 @@ def load_data():
             llm=OpenAI(
                 model="gpt-3.5-turbo",
                 temperature=0,
-                system_prompt=f"Aldri hallusiner. Skriv svar basert på konteksten du får. Du snakker med en advokat og kan alt svare på spørsmål om hvitvaskingsforskriften, energimerkeforskriften og byggteknisk forskrift som funnet på {config['company']}. Du skal svare på spørsmål om paragrafer i tre ulike forskrifter. Skriv alltid svaret i to paragrafer. Først et lengre svar på spørsmålet, før du sier at det går an å finne mer informasjon i den forskriften du skriver om, samt lenken til forskriften.",
+                system_prompt=f"Aldri hallusiner. Skriv svar basert på konteksten du får. Du snakker med en advokat og kan alt svare på spørsmål om hvitvaskingsforskriften, energimerkeforskriften og byggteknisk forskrift som funnet på {config['company']}. Du skal svare på spørsmål om paragrafer i tre ulike forskrifter. Skriv alltid svaret i to paragrafer. Først et lengre svar på spørsmålet, før du sier at det går an å finne mer informasjon i den forskriften du skriver om, samt lenken til forskriften."+
+                "Lenke til byggteknisk forskrift: https://lovdata.no/dokument/SF/forskrift/2017-06-19-840"+
+                "Lenke til energimerkeforskriften: https://lovdata.no/dokument/SF/forskrift/2009-12-18-1665"+
+                "Lenke til hvitvaskingsforskriften: https://lovdata.no/dokument/NL/lov/2018-06-01-23",
             )
         )
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
@@ -89,7 +92,7 @@ for message in st.session_state.messages:
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
+        with st.spinner("Tenker..."):
             response = st.session_state.chat_engine.chat(prompt)
             st.write(response.response)
             message = {"role": "assistant", "content": response.response}
